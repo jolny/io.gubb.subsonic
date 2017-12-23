@@ -1,0 +1,107 @@
+<html>
+<head>
+    <title>Subsonic Settings</title>
+    <script type="text/javascript" src="/homey.js" data-origin="settings"></script>
+</head>
+<body>
+    <h1 data-i18n="settings.title">
+            </h1>
+            <p data-i18n="settings.subtitle">
+            </p>
+
+            <fieldset>
+                <legend data-i18n="settings.settings_legend"></legend>
+
+                <div class="field row">
+                    <label for="server" data-i18n="settings.url"></label>
+                    <input id="server" type="text" value="" />
+                </div>
+                <div class="field row">
+                    <label for="username" data-i18n="settings.user"></label>
+                    <input id="username" type="text" value="" />
+                </div>
+                <div class="field row">
+                    <label for="password" data-i18n="settings.password"></label>
+                    <input id="password" type="password" value="" />
+                </div>
+
+            </fieldset>
+
+            <button id="save" class="right" data-i18n="settings.save"></button>
+            <button id="test" class="right" data-i18n="settings.test"></button>
+
+            <script>
+            // a method named 'onHomeyReady' must be present in your code
+            function onHomeyReady( Homey ){
+
+                // Tell Homey we're ready to be displayed
+                Homey.ready();
+
+                var serverElement = document.getElementById('server');
+                var usernameElement = document.getElementById('username');
+                var passwordElement = document.getElementById('password');
+                var saveElement = document.getElementById('save');
+                var testElement = document.getElementById('test');
+
+                Homey.get('server', function( err, server ) {
+                   if( err ) return Homey.alert( err );
+                   serverElement.value = server;
+                });
+
+                Homey.get('username', function( err, username ) {
+                   if( err ) return Homey.alert( err );
+                   usernameElement.value = username;
+                });
+
+                Homey.get('password', function( err, password ) {
+                   if( err ) return Homey.alert( err );
+                   passwordElement.value = password;
+                });
+
+                saveElement.addEventListener('click', function(e) {
+                    Homey.set('server', serverElement.value, function( err ){
+                        if( err ) return Homey.alert( err );
+                    });
+                    Homey.set('username', usernameElement.value, function( err ){
+                        if( err ) return Homey.alert( err );
+                    });
+                    Homey.set('password', passwordElement.value, function( err ){
+                        if( err ) return Homey.alert( err );
+                    });
+                    return Homey.alert("Settings saved!");
+
+                });
+
+                testElement.addEventListener('click', function(e) {
+                    //var request = require('request');
+                    var url = serverElement.value+"/rest/ping.view?u="+
+                    usernameElement.value+"&p="+
+                    passwordElement.value+
+                    "&v=1.12.0&c=myapp&f=json";
+
+                    fetch(url)
+                    .then(resp => resp.json())
+                    .then(function(response) {
+                        switch(response["subsonic-response"]["status"]) {
+                            case undefined:
+                                Homey.alert("Server unreachable!?");
+                                break;
+                            case "ok":
+                                return Homey.alert("Test successful!");
+                                break;
+                            case "failed":
+                                return Homey.alert("Server found, but incorrect credentials (?)");
+                                break;
+                            default:
+                                return Homey.alert("No case: "+response);
+                                break;
+                        }
+                    })
+                    .catch(function(err) {
+                        return Homey.alert("ERROR: "+err);
+                    });
+                });
+            }
+            </script>
+</body>
+</html>

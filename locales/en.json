@@ -1,0 +1,15 @@
+{
+	"settings": {
+		"password":"Password",
+		"save":"Save changes",
+		"settings_legend":"Server settings",
+		"subtitle": "Set your Subsonic server login information here",
+		"test":"Test login",
+		"test_fail":"Server test failed!",
+		"test_ok": "Server test successful!",
+		"title": "Subsonic Settings",
+		"url":"Server URL",
+		"user":"Username",
+		"warning": "Something went wrong, please try again"
+	}
+}

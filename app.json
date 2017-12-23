@@ -1,0 +1,30 @@
+{
+    "id": "org.subsonic",
+    "version": "0.0.1",
+    "compatibility": "1.x >=1.5.0",
+    "sdk": 2,
+    "category": "music",
+    "name": {
+        "en": "Subsonic"
+    },
+    "description": {
+        "en": "Play your favorite music from Subsonic on Homey"
+    },
+    "author": {
+        "name": "Jonas Lundblad",
+        "website": "",
+        "email": "jolnyx@gmail.com"
+    },
+    "contributing": {
+        "donate": {
+            "paypal": {
+                "username": "jonas.lundblad@vacaco.se"
+            }
+        }
+    },
+    "images": {
+        "large": "./assets/images/large.jpg",
+        "small": "./assets/images/small.jpg"
+    },
+    "media": [ "play", "search"]
+}
