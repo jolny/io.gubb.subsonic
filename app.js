@@ -66,7 +66,7 @@ class SubsonicPlayer extends Homey.App {
 
         Homey.ManagerMedia.on("play", (track, callback) => {
             var args = getArgsCopy();
-            logger(track);
+            //logger(track);
             args.parameters.id = track.trackId;
             var result = {};
             result.stream_url = Homey.ManagerSettings.get("server")+"/rest/stream"+getArgsUrl();
