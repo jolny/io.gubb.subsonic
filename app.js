@@ -5,13 +5,11 @@ const Homey = require("homey");
 var Client = require("node-rest-client").Client;
 var client = new Client();
 
-//var args = {parameters: { u: Homey.ManagerSettings.get("username"), p: Homey.ManagerSettings.get("password"), c: "Homey Subsonic App", v: "1.15.0", f: "json", albumCount: "0", artistCount: "0"}};
-
 class SubsonicPlayer extends Homey.App {
 
     onInit() {
         this.log("Subsonic Player is running.");
-        var logger = this.log;
+        //var logger = this.log;
 
         Homey.ManagerMedia.on("search", (query, callback) => {
             var search_args = getArgsCopy();
@@ -29,7 +27,7 @@ class SubsonicPlayer extends Homey.App {
                 }
                 tracks.forEach((track) => {
 
-                    var current = track;//["$"];
+                    var current = track;
                     var artworklist = getCoverArtUrls(current.coverArt);
 
                     result.push({
@@ -45,7 +43,7 @@ class SubsonicPlayer extends Homey.App {
                         album: current.album,
                         duration: parseInt(current.duration)*1000,
                         artwork: artworklist,
-                        genre: "music",
+                        genre: (current.genre ? current.genre : "music"),
                         release_date: current.created,
                         bitrate: current.bitRate,
                         codecs: ["homey:codec:mp3"],
@@ -53,7 +51,7 @@ class SubsonicPlayer extends Homey.App {
                         confidence: 0.5
                     });
                 });
-                logger(result[0]);
+                //logger(result[0]);
                 callback(null, result);
             });
 
@@ -67,16 +65,17 @@ class SubsonicPlayer extends Homey.App {
         });
 
         Homey.ManagerMedia.on("play", (track, callback) => {
+            var args = getArgsCopy();
             logger(track);
             args.parameters.id = track.trackId;
             var result = {};
-            result.stream_url = "https://chit.se/rest/stream" + getArgsUrl();
+            result.stream_url = Homey.ManagerSettings.get("server")+"/rest/stream"+getArgsUrl();
             //logger(stream_url);
             return callback(null, result);
         });
 
         function getCoverArtUrls(id) {
-            var url = "https://chit.se/rest/getCoverArt";
+            var url = Homey.ManagerSettings.get("server")+"/rest/getCoverArt";
             var url2 = getArgsUrl();
             url += url2;
             url += "&id=";
@@ -93,6 +92,7 @@ class SubsonicPlayer extends Homey.App {
         }
 
         function getArgsUrl() {
+            var args = getArgsCopy();
             var url2 = "?";
             for (var key in args.parameters) {
                 if (url2 != "?") {
@@ -108,7 +108,7 @@ class SubsonicPlayer extends Homey.App {
                 { u: Homey.ManagerSettings.get("username"),
                 p: Homey.ManagerSettings.get("password"),
                 c: "Homey Subsonic App",
-                v: "1.15.0",
+                v: "1.8.0",
                 f: "json"}};
 
             return JSON.parse(JSON.stringify(args));

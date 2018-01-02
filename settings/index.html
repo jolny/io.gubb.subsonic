@@ -83,17 +83,17 @@
                     .then(resp => resp.json())
                     .then(function(response) {
                         switch(response["subsonic-response"]["status"]) {
-                            case undefined:
-                                Homey.alert("Server unreachable!?");
-                                break;
+                            //case undefined:
+                            //    Homey.alert("Server unreachable!?");
+                            //    break;
                             case "ok":
-                                return Homey.alert("Test successful!");
+                                return Homey.alert(Homey.__("settings.test_ok"));
                                 break;
-                            case "failed":
-                                return Homey.alert("Server found, but incorrect credentials (?)");
-                                break;
+                            //case "failed":
+                            //    return Homey.alert("Server found, but incorrect credentials (?)");
+                            //    break;
                             default:
-                                return Homey.alert("No case: "+response);
+                                return Homey.alert("ERROR?: "+response);
                                 break;
                         }
                     })

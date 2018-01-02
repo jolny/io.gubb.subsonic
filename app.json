@@ -1,5 +1,5 @@
 {
-    "id": "org.subsonic",
+    "id": "io.gubb.subsonic",
     "version": "0.0.1",
     "compatibility": "1.x >=1.5.0",
     "sdk": 2,
@@ -8,7 +8,7 @@
         "en": "Subsonic"
     },
     "description": {
-        "en": "Play your favorite music from Subsonic on Homey"
+        "en": "Play your favorite music from a Subsonic server on Homey"
     },
     "author": {
         "name": "Jonas Lundblad",
@@ -18,13 +18,27 @@
     "contributing": {
         "donate": {
             "paypal": {
-                "username": "jonas.lundblad@vacaco.se"
+                "username": "jolny"
             }
         }
     },
     "images": {
-        "large": "./assets/images/large.jpg",
-        "small": "./assets/images/small.jpg"
+        "large": "./assets/images/large.png",
+        "small": "./assets/images/small.png"
     },
-    "media": [ "play", "search"]
+    "media": [ "play", "search"],
+    "dependencies": {
+        "node-rest-client": "*"
+    },
+    "tags": {
+        "en": [
+            "music",
+            "subsonic",
+            "airsonic",
+            "libresonic",
+            "madsonic",
+            "ampache",
+            "stream"]
+    },
+    "permissions": ["homey:manager:media"]
 }
