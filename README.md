@@ -12,6 +12,6 @@ To use, specify your server and login credentials in the app settings. Use the s
 * First release, search and playback working.
 
 ## Plans for future releases
+* Use of salted password parameter instead clear text
 * Playlist(s) support
 * API and/or search method selection
-* Use of salted login instead of URL parameters

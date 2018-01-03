@@ -69,7 +69,7 @@ class SubsonicPlayer extends Homey.App {
             //logger(track);
             args.parameters.id = track.trackId;
             var result = {};
-            result.stream_url = Homey.ManagerSettings.get("server")+"/rest/stream"+getArgsUrl();
+            result.stream_url = Homey.ManagerSettings.get("server")+"/rest/stream"+getArgsUrl(args);
             //logger(stream_url);
             return callback(null, result);
         });
@@ -91,8 +91,10 @@ class SubsonicPlayer extends Homey.App {
             return artwork_data;
         }
 
-        function getArgsUrl() {
-            var args = getArgsCopy();
+        function getArgsUrl(args) {
+            if (!args) {
+                args = getArgsCopy();
+            }
             var url2 = "?";
             for (var key in args.parameters) {
                 if (url2 != "?") {
