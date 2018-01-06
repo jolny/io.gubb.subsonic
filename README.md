@@ -8,6 +8,8 @@ To use, specify your server and login credentials in the app settings. Use the s
 *Note:* as [Search3](http://www.subsonic.org/pages/api.jsp#search3) is currently the only available search method, API version *1.8.0* and above are supported.
 
 ## Version history
+#### 0.0.2
+* FIX: *Node_modules* folder was in .gitignore ... :D
 #### 0.0.1
 * First release, search and playback working.
 
