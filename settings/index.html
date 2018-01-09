@@ -2,6 +2,43 @@
 <head>
     <title>Subsonic Settings</title>
     <script type="text/javascript" src="/homey.js" data-origin="settings"></script>
+    <style>
+    .tooltip {
+        position: relative;
+        display: inline-block;
+        border-bottom: 1px dotted black;
+    }
+    .tooltip .tooltiptext {
+        visibility: hidden;
+        width: 240px;
+        background-color: black;
+        color: #fff;
+        text-align: center;
+        padding: 5px 0;
+        border-radius: 6px;
+        position: absolute;
+        z-index: 10;
+        top: -5px;
+        left: 105%;
+    }
+
+    .tooltip .tooltiptext::after {
+        content: " ";
+        position: absolute;
+        top: 50%;
+        right: 100%;
+        margin-top: -5px;
+        border-width: 5px;
+        border-style: solid;
+        border-color: transparent black transparent transparent;
+    }
+    .tooltip:hover .tooltiptext {
+        visibility: visible;
+    }
+    .datafield {
+        width: 250px;
+    }
+    </style>
 </head>
 <body>
     <h1 data-i18n="settings.title">
@@ -9,20 +46,34 @@
             <p data-i18n="settings.subtitle">
             </p>
 
-            <fieldset>
+            <fieldset class="fields">
                 <legend data-i18n="settings.settings_legend"></legend>
 
                 <div class="field row">
                     <label for="server" data-i18n="settings.url"></label>
-                    <input id="server" type="text" value="" />
+                    <input id="server" type="text" value="" class="datafield"/>
                 </div>
                 <div class="field row">
                     <label for="username" data-i18n="settings.user"></label>
-                    <input id="username" type="text" value="" />
+                    <input id="username" type="text" value="" class="datafield"/>
                 </div>
                 <div class="field row">
                     <label for="password" data-i18n="settings.password"></label>
-                    <input id="password" type="password" value="" />
+                    <input id="password" type="password" value="" class="datafield"/>
+                </div>
+                <div class="field row">
+                    <label for="searchtype" data-i18n="settings.search_method"></label>
+                    <select id="searchtype" style="width: 240px;">
+                        <option value="search">search (- 1.3.0)</option>
+                        <option value="search2">search2 (1.4.0 -)</option>
+                        <option value="search3">search3 (1.8.0 -)</option>
+                    </select>
+                    <div class="tooltip">&#9432;
+                        <span class="tooltiptext"><i>search</i> is deprecated, use 2 or 3.</span>
+                    </div>
+                </div>
+                <div class="api_info">
+                    <a href="http://www.subsonic.org/pages/api.jsp">API specification can be found here</a>
                 </div>
 
             </fieldset>
@@ -40,6 +91,7 @@
                 var serverElement = document.getElementById('server');
                 var usernameElement = document.getElementById('username');
                 var passwordElement = document.getElementById('password');
+                var searchElement = document.getElementById('searchtype');
                 var saveElement = document.getElementById('save');
                 var testElement = document.getElementById('test');
 
@@ -58,6 +110,16 @@
                    passwordElement.value = password;
                 });
 
+                Homey.get('search', function( err, search ) {
+                   if( err ) return Homey.alert( err );
+                   if (!search) {
+                       searchElement.value = "search3";
+                   }
+                   else {
+                       searchElement.value = search;
+                   }
+                });
+
                 saveElement.addEventListener('click', function(e) {
                     Homey.set('server', serverElement.value, function( err ){
                         if( err ) return Homey.alert( err );
@@ -66,6 +128,9 @@
                         if( err ) return Homey.alert( err );
                     });
                     Homey.set('password', passwordElement.value, function( err ){
+                        if( err ) return Homey.alert( err );
+                    });
+                    Homey.set('search', searchElement.value, function( err ){
                         if( err ) return Homey.alert( err );
                     });
                     return Homey.alert("Settings saved!");
@@ -77,21 +142,15 @@
                     var url = serverElement.value+"/rest/ping.view?u="+
                     usernameElement.value+"&p="+
                     passwordElement.value+
-                    "&v=1.8.0&c=Homey&f=json";
+                    "&v=1.0.0&c=Homey&f=json";
 
                     fetch(url)
                     .then(resp => resp.json())
                     .then(function(response) {
                         switch(response["subsonic-response"]["status"]) {
-                            //case undefined:
-                            //    Homey.alert("Server unreachable!?");
-                            //    break;
                             case "ok":
                                 return Homey.alert(Homey.__("settings.test_ok"));
                                 break;
-                            //case "failed":
-                            //    return Homey.alert("Server found, but incorrect credentials (?)");
-                            //    break;
                             default:
                                 return Homey.alert("ERROR?: "+response);
                                 break;

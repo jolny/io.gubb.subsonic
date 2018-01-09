@@ -2,6 +2,8 @@
 
 const Homey = require("homey");
 
+var md5 = require('md5');
+
 var Client = require("node-rest-client").Client;
 var client = new Client();
 
@@ -10,15 +12,22 @@ class SubsonicPlayer extends Homey.App {
     onInit() {
         this.log("Subsonic Player is running.");
         //var logger = this.log;
+        var sendAlert = Homey.alert;
 
         Homey.ManagerMedia.on("search", (query, callback) => {
+
+            if (!verifyLogin()) {
+                return callback(new Error("login_values_null_edit_app_settings"));
+            }
+
             var search_args = getArgsCopy();
 
             search_args.parameters.query = query.searchQuery;
             search_args.parameters.albumCount = "0";
             search_args.parameters.artistCount = "0";
 
-            var search3 = client.get(Homey.ManagerSettings.get("server")+"/rest/search3", search_args, function (data, response) {
+            var search3 = client.get(Homey.ManagerSettings.get("server")+"/rest/"+Homey.ManagerSettings.get("search"),
+            search_args, function (data, response) {
                 var tracks = data["subsonic-response"]["searchResult3"]["song"];
 
                 const result = [];
@@ -57,20 +66,20 @@ class SubsonicPlayer extends Homey.App {
 
             search3.on("responseTimeout", function (res) {
                 this.log("response has expired");
+                return callback(new Error("response_timeout"));
             });
 
             search3.on("error", function (err) {
                 this.log("request error", err);
+                return callback(new Error("request_error"));
             });
         });
 
         Homey.ManagerMedia.on("play", (track, callback) => {
             var args = getArgsCopy();
-            //logger(track);
             args.parameters.id = track.trackId;
             var result = {};
             result.stream_url = Homey.ManagerSettings.get("server")+"/rest/stream"+getArgsUrl(args);
-            //logger(stream_url);
             return callback(null, result);
         });
 
@@ -106,14 +115,47 @@ class SubsonicPlayer extends Homey.App {
         }
 
         function getArgsCopy() {
-            var args ={parameters:
+            var salt = randomSalt(6);
+
+            var args = {parameters:
                 { u: Homey.ManagerSettings.get("username"),
-                p: Homey.ManagerSettings.get("password"),
+                t: md5(Homey.ManagerSettings.get("password")+salt),
+                s: salt,
                 c: "Homey Subsonic App",
                 v: "1.8.0",
                 f: "json"}};
 
             return JSON.parse(JSON.stringify(args));
+        }
+
+        function verifyLogin() {
+            var credentialList = [
+                "server",
+                "username",
+                "password"
+            ];
+            credentialList.forEach((key) => {
+                if (!Homey.ManagerSettings.get(key)) {
+                    return false;
+                }});
+            return true;
+        }
+
+        function randomSalt(length) {
+            var charset = "0123456789abcdefghijklmnopqrstuvwxyz";
+            var i = 0;
+            var salt = "";
+            while (i < length) {
+                var charNo = Math.floor(Math.random() * charset.length);
+                if (Math.floor(Math.random() * 2) == 1) {
+                    salt = salt + charset[charNo].toUpperCase();
+                }
+                else {
+                    salt = salt + charset[charNo];
+                }
+                i++;
+            }
+            return salt;
         }
     }
 }

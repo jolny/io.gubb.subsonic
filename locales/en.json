@@ -2,6 +2,7 @@
 	"settings": {
 		"password":"Password",
 		"save":"Save changes",
+		"search_method":"Search method",
 		"settings_legend":"Server settings",
 		"subtitle": "Set your Subsonic server login information here",
 		"test":"Test login",

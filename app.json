@@ -1,6 +1,6 @@
 {
     "id": "io.gubb.subsonic",
-    "version": "0.0.2",
+    "version": "0.0.3",
     "compatibility": "1.x >=1.5.0",
     "sdk": 2,
     "category": "music",
@@ -28,7 +28,8 @@
     },
     "media": [ "play", "search"],
     "dependencies": {
-        "node-rest-client": "*"
+        "node-rest-client": "*",
+        "md5": "*"
     },
     "tags": {
         "en": [
