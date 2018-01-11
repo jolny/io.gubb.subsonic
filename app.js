@@ -28,7 +28,8 @@ class SubsonicPlayer extends Homey.App {
 
             var search3 = client.get(Homey.ManagerSettings.get("server")+"/rest/"+Homey.ManagerSettings.get("search"),
             search_args, function (data, response) {
-                var tracks = data["subsonic-response"]["searchResult3"]["song"];
+                var resultContainer = Homey.ManagerSettings.get("search").replace("search", "searchResult");
+                var tracks = data["subsonic-response"][resultContainer]["song"];
 
                 const result = [];
                 if (!tracks) {
@@ -132,7 +133,8 @@ class SubsonicPlayer extends Homey.App {
             var credentialList = [
                 "server",
                 "username",
-                "password"
+                "password",
+                "search"
             ];
             credentialList.forEach((key) => {
                 if (!Homey.ManagerSettings.get(key)) {

@@ -5,10 +5,13 @@ Besides [Subsonic](http://www.subsonic.org/), it will work with forks like [Airs
 
 To use, specify your server and login credentials in the app settings. Use the same url *(including http/https)* that the Subsonic web app uses, the app will add */rest/* etc automatically. Test your login before saving.
 
-*Note:* [Search](http://www.subsonic.org/pages/api.jsp#search) is deprecated since API version 1.4.0 and is only suitable for very old installs. Use [Search2](http://www.subsonic.org/pages/api.jsp#search2) (API version 1.4.0 and later) or [Search3](http://www.subsonic.org/pages/api.jsp#search3) (API version 1.8.0 and later). Results are grouped differently, where *search3* groups by ID3 tags.
+*Note:* You can select between [Search2](http://www.subsonic.org/pages/api.jsp#search2) (API version 1.4.0 and later) or [Search3](http://www.subsonic.org/pages/api.jsp#search3) (API version 1.8.0 and later). Results are grouped differently, where *search3* groups by ID3 tags.
 
 ## Version history
-#### 0.0.3
+#### 0.0.4
+* Small bug fixes related to search selection
+* Removed *search* for now, as it is deprecated since 2010 and does not support native JSON responses
+#### --0.0.3--
 * Better error messages (in Music UI)
 * Secure (salted+hashed) login implemented (using md5 and string magic)
 * Search method selection in Settings (Search3 default)
